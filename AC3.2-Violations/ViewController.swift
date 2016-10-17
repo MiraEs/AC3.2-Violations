@@ -21,5 +21,21 @@ class ViewController: UIViewController {
     }
 
 
+    func loadData() {
+        guard let path = Bundle.main.path(forResource: "violations", ofType: "json"),
+            let jsonData = try? Data(contentsOf: URL(fileURLWithPath: path), options:  NSData.ReadingOptions.mappedIfSafe),
+            let violationsJSON = try? JSONSerialization.jsonObject(with: jsonData as Data, options: .allowFragments) as? NSArray else {
+                return
+        }
+        
+        if let violations = violationsJSON as? [[String:Any]] {
+            for violationDict in violations {
+                if let ep = Violation(withDict: violationDict) {
+                    self.episodes.append(ep)
+                }
+            }
+        }
+        
+    }
 }
 
